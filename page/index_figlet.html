@@ -1,0 +1,37 @@
+<html>
+
+<head>
+    <title>一個人的冒險</title>
+
+    <link rel='stylesheet' href='css/index.css' />
+    <link rel="stylesheet" href="librar/colorbox/colorbox.css" />
+    <link href="https://fonts.googleapis.com/css?family=Noto+Serif+TC|Overpass+Mono&display=swap" rel="stylesheet">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
+    <script src="librar/colorbox/jquery.colorbox.js"></script>
+    <script src='js/dice_start.js'></script>
+    <script src='js/creatRole.js'></script>
+
+</head>
+
+<body>
+    <pre>
+      <?=$title?>
+      這是只有天選之人才能開始的遊戲
+    </pre>
+    <div id="start"></div>
+    <br>
+    <a href='javascript: dice_start()'> 開始遊戲 </a>
+    <br>
+    <div id="trap"></div>
+    <br>
+    <div id="start_num" style="display:none">1</div>
+    <div id="start_trap" style="display:none">0</div>
+    <a style="display: none;" onclick="javascript:hidden_real_start()" id='real_start' class='iframe' href='/game/home.php?type=creatRole_show'> 真正的開始遊戲 </a>
+    <div id="real_content" style='display:none'>
+        <div id='inline_content' style='padding:10px; background:#000;'>
+
+        </div>
+    </div>
+</body>
+
+</html>

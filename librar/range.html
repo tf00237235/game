@@ -1,0 +1,101 @@
+<html>
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="Content-Type" content="text/html; charset=utf8" />
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-wEmeIV1mKuiNpC+IOBjI7aAzPcEZeedi5yW5f2yOq55WWLwNGmvvx4Um1vskeMj0" crossorigin="anonymous">
+    <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <link rel="stylesheet" href="./css/dialog.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-p34f1UUtsS3wqzfto5wAAmdvj+osOnFyQFpp4Ua3gs/ZVWx6oOypYoCJhGGScy+8" crossorigin="anonymous"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <script src="js/Chart.min.js"></script>
+    <script src="js/rand_role.js"></script>
+    <script src="js/submit_creat.js"></script>
+</head>
+
+<body>
+    <form name="form" id="form">
+        <div class="container">
+            <div class="row" style="height:90%">
+                <div class=" col-sm-6 ">
+                    <h1>人物種族簡易說明</h1>
+                    <div class="btn-group ">
+                        <?=$btn?>
+                    </div>
+                    <div id="explanation">
+
+                    </div>
+                    <div class="chartRadarDiv" style="position: relative;height:30vh; width:30vw">
+                        <canvas id="chartRadar"></canvas>
+                    </div>
+                </div>
+                <div class="col-sm-6 ">
+                    <h1>人物創建</h1>
+                    <p>
+                        <div class="input-group mb-3">
+                            <span class="input-group-text" id="inputGroup-sizing-default">名稱：</span>
+                            <input type="text" name="name" id="name" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default">
+                        </div>
+                    </p>
+                    <p>
+                        <div class="input-group mb-3">
+                            <span class="input-group-text" id="inputGroup-sizing-default">種族：</span>
+                            <input type="text" name="role" id="role" readonly class="form-control" value="深淵" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default">
+                        </div>
+                        <div id="role_num_display"></div>
+                    </p>
+                    <p>
+                        <div class="input-group mb-3">
+                            <span class="input-group-text" id="inputGroup-sizing-default">力量：</span>
+                            <input type="text" name="str" id="str" readonly class="form-control" value="0" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default">
+                        </div>
+                    </p>
+                    <p>
+                        <div class="input-group mb-3">
+                            <span class="input-group-text" id="inputGroup-sizing-default">敏捷：</span>
+                            <input type="text" name="agi" id="agi" readonly class="form-control" value="0" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default">
+                        </div>
+                    </p>
+                    <p>
+                        <div class="input-group mb-3">
+                            <span class="input-group-text" id="inputGroup-sizing-default">智慧：</span>
+                            <input type="text" name="int" id="int" readonly class="form-control" value="0" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default">
+                        </div>
+                    </p>
+                    <p>
+                        <div class="input-group mb-3">
+                            <span class="input-group-text" id="inputGroup-sizing-default">體力：</span>
+                            <input type="text" name="con" id="con" readonly class="form-control" value="0" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default">
+                        </div>
+                    </p>
+                    <p>
+                        <div class="input-group mb-3">
+                            <span class="input-group-text" id="inputGroup-sizing-default">體質：</span>
+                            <input type="text" name="vit" id="vit" readonly class="form-control" value="0" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-default">
+                        </div>
+                    </p>
+                    <input type="hidden" name="type" id="type" value="">
+                    <input type="hidden" name="role_id" id="role_id" value="">
+                    <div id="role_num" style="display:none">1</div>
+                    <div id="dialog" style="display:none">
+
+                    </div>
+                    <button type="button" class="btn btn-info" onclick="javascript: role_ethnicity();">骰種族</button>
+                    <button type="button" class="btn btn-info" onclick="javascript: role_ability();">骰能力</button>
+                </div>
+            </div>
+        </div>
+        <div class="container">
+            <div class="row">
+                <div class="d-grid gap-2 col-6 mx-auto">
+                    <button type="button" class="btn btn-primary" onclick="javascript:submit_creat(form);">創建人物</button>
+                </div>
+            </div>
+        </div>
+    </form>
+</body>
+<script src='js/explanation.js'></script>
+<script src='js/range.js'></script>
+
+</html>
