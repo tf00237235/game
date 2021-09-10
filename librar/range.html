@@ -17,7 +17,7 @@
 <body>
     <form name="form" id="form">
         <div class="container">
-            <div class="row" style="height:90%">
+            <div class="row" style="height:70%">
                 <div class=" col-sm-6 ">
                     <h1>人物種族簡易說明</h1>
                     <div class="btn-group ">
@@ -83,6 +83,20 @@
                     </div>
                     <button type="button" class="btn btn-info" onclick="javascript: role_ethnicity();">骰種族</button>
                     <button type="button" class="btn btn-info" onclick="javascript: role_ability();">骰能力</button>
+                </div>
+            </div>
+        </div>
+        <div class="container" style="height:20%">
+            <div class="row">
+                <div class="d-grid gap-2 col-6 mx-auto">
+                    <label for="customRange" class="form-label">難度選擇</label>
+                    <input type="range" name="Difficulty" value="3" class="form-range" min="0" max="5" step="1" id="customRange3" onclick="javascript:diff_range()">
+                </div>
+            </div>
+            <div class="d-grid gap-2 col-6 mx-auto">
+                <div id="diff_range">
+                    困難：<br> 出身在貧民窟，父母雖沒雙亡，但把你拉拔成人以竭盡全力！
+                    <br> (獲得隨機一個可被消除的負面天賦)
                 </div>
             </div>
         </div>

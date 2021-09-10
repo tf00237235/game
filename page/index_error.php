@@ -12,10 +12,9 @@
   </head>
   <body>
   <div id="dialog_about_me" style="display:none"></div>
-  <input type="hidden" id="role_id" value="<?=$role_id?>">
     <nav class='nav'>
-      <div> Dice </div>
-      <div> 城鎮 </div>
+      <div>  </div>
+      <div> 你是怎麼操作的... </div>
     </nav>
       <div class='main'>
       <?php include_once './page/header.html'?>

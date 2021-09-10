@@ -34,6 +34,9 @@ switch ($type) {
     case "role_ability":
         role_ability();
         break;
+    case "start_role_talent":
+        start_role_talent($_POST);
+        break;
     case "MsgError":
         MsgError();
         break;
@@ -99,25 +102,30 @@ function creatRole($frm)
         if ($frm['vit'] != $role_data['Viter']) {
             $talent++;
         }
-        $update = update_role_Name($frm['role_id'], json_encode($frm));
+        $update = update_role_Name($frm['role_id'], json_encode($frm), $talent);
     } else {
         print_r($role_data['ErrorMsg']);
         die;
     }
-    start_game();
+    start_game($frm['role_id']);
 }
-function start_game()
+//開始遊戲畫面
+function start_game($role_id)
 {
-
-    $js = "js/MsgError.js";
+    //骰天賦
+    $js = "js/game_start_role_talent.js";
     include "./page/index.php";
     include_once './page/footer_index.html';
 
+}
+function start_role_talent($frm)
+{
+    echo json_encode(role_talent($frm));
 }
 //錯誤畫面
 function MsgError()
 {
     $js = "js/MsgError.js";
-    include "./page/index.php";
+    include "./page/index_error.php";
     include_once './page/footer_index.html';
 }

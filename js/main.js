@@ -10,14 +10,16 @@ function dq(selector) {
 }
 
 class Type {
-    constructor(strings) {
+    constructor(strings, speed = 50) {
         this.strings = strings
         this.countStr = 0;
         this.countChar = 0;
         this.timer = 0;
-        this.speed = 100;
+        this.speed = speed;
     }
+
     typingEffect() {
+
         if (this.countChar < this.strings[this.countStr].content.length) {
             dq('.board__content:last-child').innerHTML += this.strings[this.countStr].content.charAt(this.countChar);
             this.countChar++;
@@ -27,15 +29,16 @@ class Type {
             this.countChar = 0;
             const item = document.createElement('div');
             item.className = 'board__content';
-            this.switchStyle(item);
+            //this.switchStyle(item);
             dq('.board').append(item);
+
             this.typingEffect();
             scroll();
         }
     }
 
     switchStyle(item) {
-        switch (strings[this.countStr].name) {
+        switch (this.strings[this.countStr].name) {
             case 'other':
                 item.classList.add('name--text');
                 break;
