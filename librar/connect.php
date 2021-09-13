@@ -8,6 +8,8 @@ try {
     die(print_r($e->getMessage()));
 }
 $talent = '';
+require "role_dice.php";
+require "talent.php";
 function get_Database_field($name, $field, $where)
 {
     global $connection;
@@ -162,119 +164,4 @@ function update_role_Name($role_id, $frm, $talent)
     $luk = mt_rand(-5, 5);
     $update = "UPDATE `role` SET `cheat`='" . $talent . "', `Difficulty` = '" . $frm['Difficulty'] . "', `Deat` = '0', `add_time` = '" . date("Y-m-d H:i:s", strtotime("now")) . "', `name`='" . $frm['name'] . "', `Lck`='" . $luk . "' WHERE `ID` = '" . $role_id . "'";
     $db_update = $connection->exec($update);
-}
-
-function role_talent($frm)
-{
-    global $connection, $talent;
-    $talent = '';
-    $talent_ID = "'0'";
-    $cheat = get_Database_field('role', 'cheat', '`ID` = "' . $frm['role_id'] . '"');
-    //隨機天賦
-    for ($i = 0; $i < mt_rand(5, 15); $i++) {
-        $range_role_talent = mt_rand(100, 1000);
-        $select = "SELECT ID,Name FROM `talent` WHERE `Type` IN ('0','1') AND range_role <= '" . $range_role_talent . "' AND `ID` NOT IN (" . $talent_ID . ") ORDER BY RAND() LIMIT 1";
-        $db = $connection->query($select);
-        foreach ($db as $row) {
-            $talent .= $row['ID'] . '|';
-            $talent_ID .= ",'" . $row['ID'] . "'";
-            //避免裝備狂卡位
-            if ($row['ID'] == '8' || $row['ID'] == '9' || $row['ID'] == '10' || $row['ID'] == '11') {
-                $talent_ID .= ",'8','9','10','11'";
-            }
-            $msg[$i]['name'] = '';
-            $msg[$i]['content'] = "取得天賦「" . $row['Name'] . "」！";
-        }
-    }
-    $role_ethnicity = get_Database_field('role', 'ethnicity', '`ID` = "' . $frm['role_id'] . '"');
-    $role_ethnicity_congenital = get_Database_field_array('role', 'Str,Dex,intellect,viter', '`ID` = "' . $frm['role_id'] . '"');
-    //種族天賦
-    $msg = get_role_ethnicity($role_ethnicity, $talent, $msg);
-    //先天天賦
-    $msg = congenital_talent($role_ethnicity_congenital, $role_ethnicity, $talent, $msg);
-
-    //作弊相關
-    if ($cheat == 5) {
-        $cheater_talent['name'] = '';
-        $cheater_talent['content'] = '取得天賦「作弊者」';
-        $talent .= '46|';
-        array_unshift($msg, $cheater_talent);
-    }
-
-    if ($cheat) {
-        $cheater['name'] = '';
-        $cheater['content'] = '...';
-        $cheater_system['name'] = 'system';
-        $cheater_system['content'] = '【系統】發現不正確數據！';
-        $cheater_talent['name'] = '';
-        $cheater_talent['content'] = '取得天賦「舞弊者」';
-        $talent .= '48|';
-        array_unshift($msg, $cheater, $cheater, $cheater, $cheater, $cheater, $cheater_system, $cheater_talent);
-    }
-
-    return $msg;
-}
-function get_role_ethnicity($role_ethnicity, $talent, $msg)
-{
-    global $connection, $talent;
-    switch ($role_ethnicity) {
-        case 1:
-            $role_ethnicity = 2;
-            break;
-        case 2:
-            $role_ethnicity = 3;
-            break;
-        case 3:
-            $role_ethnicity = 4;
-            break;
-        case 9:
-            $role_ethnicity = 5;
-            break;
-        case 4 || 5:
-            $role_ethnicity = 6;
-            break;
-    }
-
-    $select = "SELECT ID,Name FROM `talent` WHERE `Type` = '" . $role_ethnicity . "'";
-    $db = $connection->query($select);
-    foreach ($db as $row) {
-        $ethnicity_talent['name'] = "";
-        $ethnicity_talent['content'] = "取得種族天賦「" . $row['Name'] . "」！";
-        $talent .= $row['ID'] . '|';
-        array_unshift($msg, $ethnicity_talent);
-    }
-    return $msg;
-}
-function congenital_talent($role_ethnicity_congenital, $role_ethnicity, $talent, $msg)
-{
-    global $connection, $talent;
-    $ethnicity_congenital = "SELECT Str,Dex,intellect,viter FROM `ethnicity` WHERE ID = '" . $role_ethnicity . "'";
-    $db = $connection->query($ethnicity_congenital);
-    foreach ($db as $row) {
-        if ($role_ethnicity_congenital['Str'] == $row['Str']) {
-            $ethnicity_talent['name'] = "";
-            $ethnicity_talent['content'] = "取得先天天賦「天生神力」！";
-            $talent .= '1|';
-            array_unshift($msg, $ethnicity_talent);
-        }
-        if ($role_ethnicity_congenital['Dex'] == $row['Dex']) {
-            $ethnicity_talent['name'] = "";
-            $ethnicity_talent['content'] = "取得先天天賦「天生迅捷」！";
-            $talent .= '2|';
-            array_unshift($msg, $ethnicity_talent);
-        }
-        if ($role_ethnicity_congenital['intellect'] == $row['intellect']) {
-            $ethnicity_talent['name'] = "";
-            $ethnicity_talent['content'] = "取得先天天賦「天生聰穎」！";
-            $talent .= '3|';
-            array_unshift($msg, $ethnicity_talent);
-        }
-        if ($role_ethnicity_congenital['viter'] == $row['viter']) {
-            $ethnicity_talent['name'] = "";
-            $ethnicity_talent['content'] = "取得先天天賦「天生強健」！";
-            $talent .= '4|';
-            array_unshift($msg, $ethnicity_talent);
-        }
-    }
-    return $msg;
 }

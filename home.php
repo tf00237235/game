@@ -37,6 +37,9 @@ switch ($type) {
     case "start_role_talent":
         start_role_talent($_POST);
         break;
+    case "get_talent_detail":
+        get_talent_detail($_POST);
+        break;
     case "MsgError":
         MsgError();
         break;
@@ -47,12 +50,12 @@ switch ($type) {
 //進入頁
 function index_figlet()
 {
-    require '../../php/vendor/autoload.php';
-
-    $figlet = new Laminas\Text\Figlet\Figlet();
-    $title = "<BR>";
-    $title .= $figlet->setFont('fonts/starwars.flf')->render('DICE');
-
+/*
+require '../../php/vendor/autoload.php';
+$figlet = new Laminas\Text\Figlet\Figlet();
+$title = "<BR>";
+$title .= $figlet->setFont('fonts/starwars.flf')->render('DICE');
+ */
     include "./page/index_figlet.html";
 }
 //創建角色畫面
@@ -107,10 +110,10 @@ function creatRole($frm)
         print_r($role_data['ErrorMsg']);
         die;
     }
-    start_game($frm['role_id']);
+    start_game($frm['role_id'], $frm['Difficulty']);
 }
 //開始遊戲畫面
-function start_game($role_id)
+function start_game($role_id, $difficulty)
 {
     //骰天賦
     $js = "js/game_start_role_talent.js";
@@ -121,6 +124,15 @@ function start_game($role_id)
 function start_role_talent($frm)
 {
     echo json_encode(role_talent($frm));
+}
+//取得天賦內容
+function get_talent_detail($frm)
+{
+    if ($frm['detail']) {
+        echo get_talent_detail_con($frm);
+    } else {
+        echo json_encode(talent_detail_con($frm));
+    }
 }
 //錯誤畫面
 function MsgError()

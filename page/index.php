@@ -9,10 +9,13 @@
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
     <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
     <script src='js/about_me.js'></script>
+    <script src='js/show_talent.js'></script>
   </head>
   <body>
-  <div id="dialog_about_me" style="display:none"></div>
+  <div id="dialog_about_me" style="display:none;overflow:auto;" ></div>
   <input type="hidden" id="role_id" value="<?=$role_id?>">
+  <input type="hidden" id="difficulty" value="<?=$difficulty?>">
+  <div id="dialog" style="display:none"></div>
     <nav class='nav'>
       <div> Dice </div>
       <div> 城鎮 </div>

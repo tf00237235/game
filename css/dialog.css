@@ -1,3 +1,12 @@
 .dlg-no-close .ui-dialog-titlebar-close {
     display: none;
 }
+
+.dlg-no-close .ui-dialog-title {
+    color: #000
+}
+
+.ui-dialog .ui-dialog-buttonpane .ui-dialog-buttonset {
+    text-align: center;
+    float: none;
+}
