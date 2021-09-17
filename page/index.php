@@ -10,6 +10,7 @@
     <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
     <script src='js/about_me.js'></script>
     <script src='js/show_talent.js'></script>
+    <script src='js/show_status.js'></script>
   </head>
   <body>
   <div id="dialog_about_me" style="display:none;overflow:auto;" ></div>

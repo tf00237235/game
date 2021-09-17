@@ -9,7 +9,7 @@ function show_talent() {
         },
         datatype: "json",
         success: function(result) {
-            //result = JSON.parse(result);
+            document.getElementById("dialog").innerHTML = "";
             document.getElementById("dialog").innerHTML = result;
             $("#dialog").css({ overflow: "auto" }).dialog({
                 width: "70%",

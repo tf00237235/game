@@ -8,7 +8,6 @@ $.ajax({
     },
     datatype: "json",
     success: function(result) {
-        console.log(result);
         result = JSON.parse(result);
         const talent = new Type(result, 30);
         talent.typingEffect();

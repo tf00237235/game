@@ -40,6 +40,9 @@ switch ($type) {
     case "get_talent_detail":
         get_talent_detail($_POST);
         break;
+    case "get_status":
+        get_status($_POST);
+        break;
     case "MsgError":
         MsgError();
         break;
@@ -133,6 +136,11 @@ function get_talent_detail($frm)
     } else {
         echo json_encode(talent_detail_con($frm));
     }
+}
+//取得數據狀態
+function get_status($frm)
+{
+    echo json_encode(get_status_con($frm['role_id']));
 }
 //錯誤畫面
 function MsgError()

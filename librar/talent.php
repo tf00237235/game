@@ -6,14 +6,13 @@ function role_talent($frm)
     $talent = '';
     $talent_ID = "'0'";
 
-    /*
-    //檢查天賦
+//檢查天賦
     $check_talent = get_Database_field('role', 'talent', '`ID` = "' . $frm['role_id'] . '"');
     if ($check_talent != '') {
-    $msg = already_talent();
-    return $msg;
+        $msg = already_talent();
+        return $msg;
     }
-     */
+
     //檢查作弊
     $cheat = get_Database_field('role', 'cheat', '`ID` = "' . $frm['role_id'] . '"');
     //檢查種族
@@ -25,6 +24,27 @@ function role_talent($frm)
     //人族天賦額外+5
     if ($role_ethnicity == 1) {
         $talent_num += 5;
+    }
+    //難度
+    switch ($frm['difficulty']) {
+        case "0":
+            $talent_num += 3;
+            break;
+        case "1":
+            $talent_num += 1;
+            break;
+        case "2":
+            break;
+        case "3":
+            $talent_num -= 1;
+            break;
+        case "4":
+            $talent_num -= 3;
+            break;
+        case "5":
+            $talent_num_plus = mt_rand(-3, 5);
+            $talent_num += $talent_num_plus;
+            break;
     }
     for ($i = 1; $i <= $talent_num; $i++) {
         $range_role_talent = mt_rand(100, 1000);
@@ -38,7 +58,7 @@ function role_talent($frm)
                 $talent_ID .= ",'8','9','10','11'";
             }
             $msg[$i]['name'] = '';
-            $msg[$i]['content'] = "取得天賦「" . $row['Name'] . "」！";
+            $msg[$i]['content'] = "【系統】取得天賦「" . $row['Name'] . "」！";
         }
     }
 
@@ -52,7 +72,7 @@ function role_talent($frm)
     //作弊相關
     if ($cheat == 5) {
         $cheater_talent['name'] = '';
-        $cheater_talent['content'] = '取得天賦「作弊者」';
+        $cheater_talent['content'] = '【系統】取得天賦「作弊者」';
         $talent .= '46|';
         array_unshift($msg, $cheater_talent);
     }
@@ -63,7 +83,7 @@ function role_talent($frm)
         $cheater_system['name'] = 'system';
         $cheater_system['content'] = '【系統】發現不正確數據！';
         $cheater_talent['name'] = '';
-        $cheater_talent['content'] = '取得天賦「舞弊者」';
+        $cheater_talent['content'] = '【系統】取得天賦「舞弊者」';
         $talent .= '48|';
         array_unshift($msg, $cheater, $cheater, $cheater, $cheater, $cheater, $cheater_system, $cheater_talent);
     }
@@ -71,11 +91,16 @@ function role_talent($frm)
     $system['name'] = "system";
     $system['content'] = "【系統】 初始化中，請稍後！";
     array_unshift($msg, $system);
+    if ($frm['difficulty'] == 5) {
+        $system['name'] = "system";
+        $system['content'] = "【系統】「?????」給你增加了：" . $talent_num_plus . "個天賦！";
+        array_unshift($msg, $system);
+    }
     //寫入資料庫
     $update = "UPDATE `role` SET `talent` = '" . $talent . "' WHERE `ID` = '" . $frm['role_id'] . "'";
     $db = $connection->query($update);
     //骰子、間距計算
-    $msg = dice_range($frm['role_id'], $msg, $talent);
+    $msg = dice_range($frm['role_id'], $msg, $talent, $role_ethnicity);
 
     return $msg;
 }
@@ -107,7 +132,7 @@ function get_role_ethnicity($role_ethnicity, $talent, $msg)
     $db = $connection->query($select);
     foreach ($db as $row) {
         $ethnicity_talent['name'] = "";
-        $ethnicity_talent['content'] = "取得種族天賦「" . $row['Name'] . "」！";
+        $ethnicity_talent['content'] = "【系統】取得種族天賦「" . $row['Name'] . "」！";
         $talent .= $row['ID'] . '|';
         array_unshift($msg, $ethnicity_talent);
     }
@@ -131,7 +156,7 @@ function get_role_ethnicity_humen($role_ethnicity, $talent, $msg)
                 $talent .= $row['ID'] . '|';
                 $talent_ID .= ",'" . $row['ID'] . "'";
                 $humen_talent['name'] = '';
-                $humen_talent['content'] = "取得種族天賦「" . $row['Name'] . "」！";
+                $humen_talent['content'] = "【系統】取得種族天賦「" . $row['Name'] . "」！";
                 array_unshift($msg, $humen_talent);
             }
             break;
@@ -149,25 +174,25 @@ function congenital_talent($role_ethnicity_congenital, $role_ethnicity, $talent,
     foreach ($db as $row) {
         if ($role_ethnicity_congenital['Str'] == $row['Str']) {
             $ethnicity_talent['name'] = "";
-            $ethnicity_talent['content'] = "取得先天天賦「天生神力」！";
+            $ethnicity_talent['content'] = "【系統】取得先天天賦「天生神力」！";
             $talent .= '1|';
             array_unshift($msg, $ethnicity_talent);
         }
         if ($role_ethnicity_congenital['Dex'] == $row['Dex']) {
             $ethnicity_talent['name'] = "";
-            $ethnicity_talent['content'] = "取得先天天賦「天生迅捷」！";
+            $ethnicity_talent['content'] = "【系統】取得先天天賦「天生迅捷」！";
             $talent .= '2|';
             array_unshift($msg, $ethnicity_talent);
         }
         if ($role_ethnicity_congenital['intellect'] == $row['intellect']) {
             $ethnicity_talent['name'] = "";
-            $ethnicity_talent['content'] = "取得先天天賦「天生聰穎」！";
+            $ethnicity_talent['content'] = "【系統】取得先天天賦「天生聰穎」！";
             $talent .= '3|';
             array_unshift($msg, $ethnicity_talent);
         }
         if ($role_ethnicity_congenital['viter'] == $row['viter']) {
             $ethnicity_talent['name'] = "";
-            $ethnicity_talent['content'] = "取得先天天賦「天生強健」！";
+            $ethnicity_talent['content'] = "【系統】取得先天天賦「天生強健」！";
             $talent .= '4|';
             array_unshift($msg, $ethnicity_talent);
         }
@@ -177,7 +202,22 @@ function congenital_talent($role_ethnicity_congenital, $role_ethnicity, $talent,
 //人物專屬天賦
 function exclusive_talent($role_name, $talent, $msg)
 {
-
+    global $talent;
+    if ($role_name == '茄汁蝦') {
+        $exclusive_talent['name'] = "";
+        $exclusive_talent['content'] = "【系統】取得專屬天賦「不眠蝦」！";
+        array_unshift($msg, $exclusive_talent);
+        $exclusive_talent['name'] = "";
+        $exclusive_talent['content'] = "【系統】取得專屬天賦「鮮蝦」！";
+        array_unshift($msg, $exclusive_talent);
+        $exclusive_talent['name'] = "";
+        $exclusive_talent['content'] = "【系統】取得專屬天賦「炸蝦」！";
+        array_unshift($msg, $exclusive_talent);
+        $exclusive_talent['name'] = "";
+        $exclusive_talent['content'] = "【系統】取得專屬天賦「茄汁蝦」！";
+        array_unshift($msg, $exclusive_talent);
+        $talent .= '53|54|55|56|';
+    }
     return $msg;
 }
 //天賦詳細資料按鈕
@@ -196,7 +236,7 @@ function get_talent_detail_con($frm)
         $sql .= "'" . $talent[$i] . "',";
     }
     $sql = substr($sql, 0, -1);
-    $select = "SELECT ID,Name FROM `talent` WHERE `ID` in (" . $sql . ")  ORDER BY `Type` DESC,`ID` ASC";
+    $select = "SELECT ID,Name FROM `talent` WHERE `ID` in (" . $sql . ")  ORDER BY `range_role` DESC,`Type` DESC,`ID` ASC";
     $db = $connection->query($select);
     $html = '';
     foreach ($db as $row) {
@@ -223,6 +263,6 @@ function talent_detail_con($frm)
 function already_talent()
 {
     $msg[0]['name'] = "";
-    $msg[0]['content'] = "【系統】 已擁有天賦！";
+    $msg[0]['content'] = "【系統】 回到城鎮！";
     return $msg;
 }
