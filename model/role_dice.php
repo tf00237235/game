@@ -71,10 +71,6 @@ function dice_range_talent($role_id, $msg, $talent, $role_ethnicity)
     $dice_range['content'] = '【系統】天賦套用完畢！';
     array_push($msg, $dice_range);
 
-    $dice_range['name'] = '';
-    $dice_range['content'] = '【系統】詳細數據請至「狀態」查看！';
-    array_push($msg, $dice_range);
-
     return $msg;
 }
 function switch_talent($talent, $row, $role_ethnicity)

@@ -14,6 +14,8 @@ require "role_dice.php";
 require "talent.php";
 //角色相關
 require "role.php";
+//冒險相關
+require "travel.php";
 //裝備相關
 require "equipment.php";
 function get_Database_field($name, $field, $where)

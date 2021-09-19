@@ -11,6 +11,7 @@
     <script src='js/about_me.js'></script>
     <script src='js/show_talent.js'></script>
     <script src='js/show_status.js'></script>
+    <script src='js/show_travel.js'></script>
   </head>
   <body>
   <div id="dialog_about_me" style="display:none;overflow:auto;" ></div>
@@ -22,7 +23,7 @@
       <div> 城鎮 </div>
     </nav>
       <div class='main'>
-      <?php include_once './page/header.html'?>
+      <?php include_once './view/header.html'?>
       </div>
       <script src='js/main.js'></script>
       <script src='<?php echo $js; ?>'></script>

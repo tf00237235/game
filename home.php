@@ -9,8 +9,8 @@ $_SESSION['LAST_REMOTE_ADDR'] = $_SERVER['REMOTE_ADDR'];
 $_SESSION['LAST_USER_AGENT'] = $_SERVER['HTTP_USER_AGENT'];
  */
 
-include "librar/rand.php";
-include "librar/connect.php";
+include "model/rand.php";
+include "model/connect.php";
 
 error_reporting(0);
 if ($_POST['type'] != '') {
@@ -43,6 +43,9 @@ switch ($type) {
     case "get_status":
         get_status($_POST);
         break;
+    case "travel_save":
+        travel_save($_POST);
+        break;
     case "MsgError":
         MsgError();
         break;
@@ -59,7 +62,7 @@ $figlet = new Laminas\Text\Figlet\Figlet();
 $title = "<BR>";
 $title .= $figlet->setFont('fonts/starwars.flf')->render('DICE');
  */
-    include "./page/index_figlet.html";
+    include "./view/index_figlet.html";
 }
 //創建角色畫面
 function creatRole_show()
@@ -70,7 +73,7 @@ function creatRole_show()
         $btn .= '<button type="button" class="btn btn-info" onclick="javascript: explanation(\'' . $get_role[$j]['Name'] . '\',' . $get_role[$j]['Str'] . ',' . $get_role[$j]['Dex'] . ',' . $get_role[$j]['intellect'] . ',' . $get_role[$j]['Vit'] . ',' . $get_role[$j]['Viter'] . ',\'' . $get_role[$j]['explanation'] . '\')">' . $get_role[$j]['Name'] . '</button>';
     }
 
-    include "./librar/range.html";
+    include "./view/range.html";
 }
 //骰種族
 function role_ethnicity()
@@ -120,8 +123,8 @@ function start_game($role_id, $difficulty)
 {
     //骰天賦
     $js = "js/game_start_role_talent.js";
-    include "./page/index.php";
-    include_once './page/footer_index.html';
+    include "./view/index.php";
+    include_once './view/footer_index.html';
 
 }
 function start_role_talent($frm)
@@ -142,10 +145,26 @@ function get_status($frm)
 {
     echo json_encode(get_status_con($frm['role_id']));
 }
+function travel_save($frm)
+{
+    //讀取最新行程
+    //travel_save_con();
+    travel_start();
+}
+function travel_start()
+{
+
+    //骰天賦
+    $js = "js/game_start_role_talent.js";
+    include "./view/index.php";
+    include_once './view/footer_index.html';
+
+}
+
 //錯誤畫面
 function MsgError()
 {
     $js = "js/MsgError.js";
-    include "./page/index_error.php";
-    include_once './page/footer_index.html';
+    include "./view/index_error.php";
+    include_once './view/footer_index.html';
 }

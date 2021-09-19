@@ -15,7 +15,7 @@ function show_talent() {
                 width: "70%",
                 height: "450",
                 buttons: {
-                    "Ok": function() {
+                    "關閉": function() {
                         $(this).dialog("close");
                     }
                 },
