@@ -263,6 +263,6 @@ function talent_detail_con($frm)
 function already_talent()
 {
     $msg[0]['name'] = "";
-    $msg[0]['content'] = "【 回到城鎮 】";
+    $msg[0]['content'] = "【 進入城鎮 】";
     return $msg;
 }

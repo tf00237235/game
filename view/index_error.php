@@ -8,18 +8,24 @@
     <link rel="stylesheet" href="./css/dialog.css">
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
     <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
-    <script src='js/about_me.js'></script>
   </head>
   <body>
+  <form id="form">
+    <input type="hidden" name="type" id="type" value="">
+    <input type="hidden" name="role_id" value="<?=$role_id?>">
+    <input type="hidden" name="difficulty" value="">
+  </form>
   <div id="dialog_about_me" style="display:none"></div>
     <nav class='nav'>
       <div>  </div>
       <div> 你是怎麼操作的... </div>
     </nav>
       <div class='main'>
-      <?php include_once './page/header.html'?>
+      <?php include_once './view/header.html'?>
       </div>
       <script src='js/main.js'></script>
       <script src='<?php echo $js; ?>'></script>
+      <script src='js/about_me.js'></script>
+      <script src='js/MsgError.js'></script>
   </body>
 </html>

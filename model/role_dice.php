@@ -178,12 +178,12 @@ function switch_talent($talent, $row, $role_ethnicity)
             break;
         case "51":
             $row['atk_dice_num'] += 1;
-            $row = range_determination_low_plus($row, "atk_dice_num", 5);
+            $row = range_determination_low_plus($row, "atk_dice_range", 5);
             break;
         case "53":
             $row = range_determination_high_plus($row, "goods_dice_range", 10);
-            $row = range_determination_high_plus($row, "atk_dice_num", 10);
-            $row = range_determination_low_plus($row, "atk_dice_num", 5);
+            $row = range_determination_high_plus($row, "atk_dice_range", 10);
+            $row = range_determination_low_plus($row, "atk_dice_range", 5);
             break;
     }
 
@@ -233,7 +233,7 @@ function change_dice_num($row, $type)
 {
     $type = explode(",", $type);
     $role = get_Database_field_array('role', 'Str,Dex,intellect,viter,vit,lck', '`ID` = "' . $row['role_id'] . '"');
-    $row['atk_dice_num'] = round(($role[$type[0]] * 1.6) + ($role[$type[1]] * 1.4)) . "," . round(($role[$type[0]] * 2) + ($role[$type[1]] * 1.4));
+    $row['atk_dice_range'] = round(($role[$type[0]] * 1.6) + ($role[$type[1]] * 1.4)) . "," . round(($role[$type[0]] * 2) + ($role[$type[1]] * 1.4));
     return $row;
 }
 //種族專屬天賦
@@ -251,6 +251,7 @@ function ethnicity_dice($row, $role_ethnicity)
 
         $row = range_determination_low_plus($row, "atk_dice_range", 8);
         $row = range_determination_low_plus($row, "def_dice_range", 8);
+        $row = range_determination_high_subtraction($row, "dodge_dice_range", 10);
 
         $atk_dice_range = explode(",", $row['atk_dice_range']);
         $def_dice_range = explode(",", $row['def_dice_range']);

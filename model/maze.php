@@ -1,5 +1,4 @@
 <?PHP
-require "connect.php";
 //創建迷宮
 function maze_creat($role_id, $difficulty)
 {
@@ -41,11 +40,11 @@ function maze_creat($role_id, $difficulty)
     //創建迷宮
     $maze_creat = travel_size($parameter);
     //回傳
-    if ($maze_creat['Error']) {
+    if (!$maze_creat['Error']) {
         $msg = array("Error" => "0");
         return $msg;
     } else {
-        $msg = array("Error" => "1", "ErrorMsg" => $maze_creat);
+        $msg = array("Error" => "1");
         return $msg;
     }
 }
@@ -62,6 +61,7 @@ function monster_dice()
 //骰迷宮本體
 function travel_size($parameter)
 {
+    global $connection;
     //參數拆解
     $parameter['monster_num'] = explode(",", $parameter['monster_num']);
     $parameter['boss_check'] = explode(",", $parameter['boss_check']);
@@ -70,18 +70,21 @@ function travel_size($parameter)
     //骰迷宮參數
     $monster_num = mt_rand($parameter['monster_num'][0], $parameter['monster_num'][1]);
     $boss_check = mt_rand($parameter['boss_check'][0], $parameter['boss_check'][1]);
+    $boss_num = 0;
     if ($boss_check >= 500) {
         $boss_num = mt_rand($parameter['boss_num'][0], $parameter['boss_num'][1]);
     }
     $event_num = mt_rand($parameter['event_num'][0], $parameter['event_num'][1]);
-
     //大小
     $area_size = mt_rand(1, $parameter['size']);
     //地區
     $terrain = mt_rand(1, 9);
+    $get_round_id = get_Database_field("role_round", "ID", "role_id='" . $parameter['role_id'] . "' ORDER BY add_time DESC limit 1");
     //sql
-    $insert = "INSERT INTO `maze`(`role_id`, `difficulty`, `terrain`, `size`, `monster_num`, `boss_num`, `event_num`, `schedule`) VALUES "
-        . "('".$parameter['role_id']."','".$parameter['difficulty']."','".$terrain."','".$area_size."','".$monster_num."','".$boss_num."','".$event_num."','".."')";
+    $insert = "INSERT INTO `maze`(`role_id`, `difficulty`, `terrain`, `size`, `monster_num`, `boss_num`, `event_num`, `role_round_id`) VALUES
+    ('" . $parameter['role_id'] . "','" . $parameter['difficulty'] . "','" . $terrain . "','" . $area_size . "','" . $monster_num . "','" . $boss_num . "','" . $event_num . "','" . $get_round_id . "')";
+    $db = $connection->query($insert);
+
     $msg = array("Error" => '0');
     return $msg;
 }

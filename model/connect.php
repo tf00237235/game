@@ -7,17 +7,20 @@ try {
 } catch (Exception $e) {
     die(print_r($e->getMessage()));
 }
+date_default_timezone_set("Asia/Taipei");
 $talent = '';
 //骰子相關
-require "role_dice.php";
+require_once "role_dice.php";
 //天賦相關
-require "talent.php";
+require_once "talent.php";
 //角色相關
-require "role.php";
+require_once "role.php";
 //冒險相關
-require "travel.php";
+require_once "travel.php";
 //裝備相關
-require "equipment.php";
+require_once "equipment.php";
+//迷宮相關
+require_once "maze.php";
 function get_Database_field($name, $field, $where)
 {
     global $connection;

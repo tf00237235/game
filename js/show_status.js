@@ -10,7 +10,6 @@ function show_status() {
         success: function(result) {
             document.getElementById("dialog").innerHTML = "";
             result = JSON.parse(result);
-            console.log(result.str_dice_range.replace(",", "~"));
             document.getElementById("dialog").innerHTML =
                 "角色名：" + result.Name + " (" + result.eName + ")<br>" +
                 "力量判定點數：" + result.str_dice_range.replace(",", " ~ ") + " (骰子數：" + result.str_dice_num + ")<br>" +
@@ -28,7 +27,7 @@ function show_status() {
                 width: "70%",
                 height: "550",
                 buttons: {
-                    "Ok": function() {
+                    "關閉": function() {
                         $(this).dialog("close");
                     }
                 },
