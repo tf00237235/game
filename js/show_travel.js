@@ -12,11 +12,10 @@ function show_travel() {
             '<td  align="center">' +
             '<select onchange="javascript:change_illustrate(' + i + ')" name="travel_' + i + '" id="travel_' + i + '" style="color:#000">' +
             '<option value="" style="color:#000">第' + (i + 1) + '季</option>' +
-            '<option value="2" style="color:#000">冒險(簡易)</option>' +
-            '<option value="1" style="color:#000">冒險(普通)</option>' +
-            '<option value="0" style="color:#000">冒險(困難)</option>' +
-            '<option value="3" style="color:#000">城鎮訓練</option>' +
-            '<option value="4" style="color:#000">城鎮休息</option>' +
+            '<option value="0" style="color:#000">冒險</option>' +
+            '<option value="1" style="color:#000">訓練</option>' +
+            '<option value="2" style="color:#000">休息</option>' +
+            '<option value="3" style="color:#000">挑戰</option>' +
             '</select>';
         document.getElementById("tr_illustrate").innerHTML +=
             '<td  align="center">' +
@@ -49,26 +48,19 @@ function change_illustrate(travel_illustrate_box) {
 
     switch (option_value) {
         case "0":
-            console.log(option_value);
-            document.getElementById("show_travel_illustrate_" + travel_illustrate_box).innerHTML = "極度困難！";
+            document.getElementById("show_travel_illustrate_" + travel_illustrate_box).innerHTML = "隨機的難度！";
             break;
         case "1":
-            console.log(option_value);
-            document.getElementById("show_travel_illustrate_" + travel_illustrate_box).innerHTML = "有點困難！";
-            break;
-        case "2":
-            console.log(option_value);
-            document.getElementById("show_travel_illustrate_" + travel_illustrate_box).innerHTML = "簡單！";
-            break;
-        case "3":
-            console.log(option_value);
             document.getElementById("show_travel_illustrate_" + travel_illustrate_box).innerHTML =
                 "進行訓練<br>訓練有沒有效、訓練哪個能力一切隨機。";
             break;
-        case "4":
-            console.log(option_value);
+        case "2":
             document.getElementById("show_travel_illustrate_" + travel_illustrate_box).innerHTML =
                 "隨機產生3~10個事件<br>好壞各安天命。";
+            break;
+        case "3":
+            document.getElementById("show_travel_illustrate_" + travel_illustrate_box).innerHTML =
+                "不建議剛創角就去打！";
             break;
     }
 

@@ -11,7 +11,7 @@ try {
 
 for ($i = 1; $i <= 1000; $i++) {
     $range_role_talent = mt_rand(100, 1000);
-    $select = "SELECT ID,Name FROM `talent` WHERE `Type` IN ('0','1') AND range_role <= '" . $range_role_talent . "' ORDER BY RAND() LIMIT 1";
+    $select = "SELECT ID,Name FROM `talent` WHERE `Type` IN ('0','1') AND range_role <= '{$range_role_talent}' ORDER BY RAND() LIMIT 1";
     $db = $connection->query($select);
     foreach ($db as $row) {
         $msg['rand_time'] += 1;

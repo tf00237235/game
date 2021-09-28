@@ -7,7 +7,7 @@ try {
 } catch (Exception $e) {
     die(print_r($e->getMessage()));
 }
-date_default_timezone_set("Asia/Taipei");
+
 $talent = '';
 //骰子相關
 require_once "role_dice.php";
@@ -25,21 +25,51 @@ function get_Database_field($name, $field, $where)
 {
     global $connection;
     $select = "SELECT " . $field . " FROM `" . $name . "` WHERE " . $where;
-    $db_select = $connection->query($select);
+    $db_select = $connection->query($select)->fetchAll(PDO::FETCH_ASSOC);
     foreach ($db_select as $row) {
         return $row[$field];
     }
-
-    //return $data;
 }
 function get_Database_field_array($name, $field, $where)
 {
     global $connection;
     $select = "SELECT " . $field . " FROM `" . $name . "` WHERE " . $where;
-    $db_select = $connection->query($select);
+    $db_select = $connection->query($select)->fetchAll(PDO::FETCH_ASSOC);
     foreach ($db_select as $row) {
         return $row;
     }
+}
+function get_field_array($name, $field, $where)
+{
+    global $connection;
+    $select = "SELECT " . $field . " FROM `" . $name . "` WHERE " . $where;
+    $db_select = $connection->query($select)->fetchAll(PDO::FETCH_ASSOC);
+    foreach ($db_select as $row) {
+        $data[] = $row;
+    }
+    return $data;
+}
+function get_field_num($name, $field, $where)
+{
+    global $connection;
+    $select = "SELECT " . $field . " FROM `" . $name . "` WHERE " . $where;
+    $db_select = $connection->query($select);
+    $num = $db_select->rowCount();
+    return $num;
+}
+function update_field($name, $field, $value, $where)
+{
+    global $connection;
+    $select = "UPDATE `{$name}` SET `{$field}`='{$value}' WHERE {$where}";
+    $db_select = $connection->query($select);
 
-    //return $data;
+}
+function msg_creat($data)
+{
+    foreach ($data as $key => $value) {
+        $msg[$key]['name'] = $value[0];
+        $msg[$key]['content'] = $value[1];
+    }
+    sleep(1);
+    return $msg;
 }

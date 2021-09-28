@@ -130,7 +130,7 @@ function update_role_Name($role_id, $frm, $talent)
     global $connection;
     $frm = json_decode($frm, true);
     $luk = mt_rand(-5, 5);
-    $age = mt_rand(17, 99);
+    $age = mt_rand(18, 99);
     $frm = special_name($frm, $role_id);
     $update = "UPDATE `role` SET `ethnicity`='" . $frm['ethnicity'] . "', `max_age` = '" . $age . "', `age`='17', `cheat`='" . $talent . "', `Difficulty` = '" . $frm['Difficulty'] . "', `Deat` = '0', `add_time` = '" . date("Y-m-d H:i:s", strtotime("now")) . "', `name`='" . $frm['name'] . "', `Lck`='" . $luk . "' WHERE `ID` = '" . $role_id . "'";
     $db_update = $connection->exec($update);

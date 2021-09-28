@@ -8,11 +8,10 @@ session_regenerate_id();
 $_SESSION['LAST_REMOTE_ADDR'] = $_SERVER['REMOTE_ADDR'];
 $_SESSION['LAST_USER_AGENT'] = $_SERVER['HTTP_USER_AGENT'];
  */
-
-require_once "model/rand.php";
-require_once "model/connect.php";
 date_default_timezone_set("Asia/Taipei");
 error_reporting(0);
+require_once "model/rand.php";
+require_once "model/connect.php";
 if ($_POST['type'] != '') {
     $type = $_POST['type'];
 } else if ($_GET['type'] == 'creatRole_show') {
@@ -45,6 +44,12 @@ switch ($type) {
         break;
     case "travel_save":
         travel_save($_POST);
+        break;
+    case "maze_monster_creat":
+        maze_monster_creat($_POST);
+        break;
+    case "travel_instruction":
+        travel_instruction($_POST);
         break;
     case "start_game":
         start_game($_POST['role_id'], $_POST['difficulty']);
@@ -121,7 +126,7 @@ function creatRole($frm)
 //開始遊戲畫面
 function start_game($role_id, $difficulty)
 {
-    if ($difficulty == '') {$$difficulty = get_Database_field("role", "difficulty", "ID='" . $role_id . "' ");}
+    if ($difficulty == '') {$$difficulty = get_Database_field("role", "difficulty", "ID='{$role_id}' ");}
     //骰天賦
     $js = "js/game_start_role_talent.js";
     require_once "./view/index.php";
@@ -160,19 +165,19 @@ function travel_save($frm)
 }
 function travel_start($role_id)
 {
-    $get_now_round = get_Database_field("role_round", "travel_now", "role_id='" . $role_id . "' ORDER BY add_time DESC limit 1");
+    $get_now_round = get_Database_field("role_round", "travel_now", "role_id='{$role_id}' ORDER BY add_time DESC limit 1");
     switch ($get_now_round) {
         case 1:
-            $get_travel = get_Database_field("role_round", "travel_first", "role_id='" . $role_id . "' ORDER BY add_time DESC limit 1");
+            $get_travel = get_Database_field("role_round", "travel_first", "role_id='{$role_id}' ORDER BY add_time DESC limit 1");
             break;
         case 2:
-            $get_travel = get_Database_field("role_round", "travel_second", "role_id='" . $role_id . "' ORDER BY add_time DESC limit 1");
+            $get_travel = get_Database_field("role_round", "travel_second", "role_id='{$role_id}' ORDER BY add_time DESC limit 1");
             break;
         case 3:
-            $get_travel = get_Database_field("role_round", "travel_third", "role_id='" . $role_id . "' ORDER BY add_time DESC limit 1");
+            $get_travel = get_Database_field("role_round", "travel_third", "role_id='{$role_id}' ORDER BY add_time DESC limit 1");
             break;
         case 4:
-            $get_travel = get_Database_field("role_round", "travel_fourth", "role_id='" . $role_id . "' ORDER BY add_time DESC limit 1");
+            $get_travel = get_Database_field("role_round", "travel_fourth", "role_id='{$role_id}' ORDER BY add_time DESC limit 1");
             break;
         default:
             MsgError($role_id);
@@ -180,10 +185,9 @@ function travel_start($role_id)
     }
     switch ($get_travel) {
         case 0:
-        case 1:
-        case 2:
             //製作迷宮
-            $maze = maze_creat($role_id, $get_travel);
+            $maze = maze_creat($role_id);
+            $maze_id = $maze['maze_id'];
             if (!$maze['Error']) {
                 $js = "js/travel_start.js";
                 require_once "./view/adventure.php";
@@ -192,16 +196,38 @@ function travel_start($role_id)
                 MsgError($role_id);
             }
             break;
-        case 3:
-        case 4:
+        case 1:
             //載入事件
             require_once "./view/index.php";
             require_once './view/footer_index.html';
             break;
+        case 2:
+            //載入事件
+            require_once "./view/index.php";
+            require_once './view/footer_index.html';
+            break;
+        case 3:
+            //載入事件
+            require_once "./view/index.php";
+            require_once './view/footer_index.html';
+            break;
+        default:
+            MsgError($role_id);
+            break;
+
     }
 
 }
+function maze_monster_creat($frm)
+{
+    $maze_id = $frm['maze_id'];
+    $role_id = $frm['role_id'];
+    echo json_encode(maze_monster_creat_con($maze_id));
+}
+function travel_instruction($frm)
+{
 
+}
 //錯誤畫面
 function MsgError($role_id)
 {
