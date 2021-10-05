@@ -64,12 +64,26 @@ function update_field($name, $field, $value, $where)
     $db_select = $connection->query($select);
 
 }
-function msg_creat($data)
+function msg_creat($data, $sleep)
 {
     foreach ($data as $key => $value) {
         $msg[$key]['name'] = $value[0];
         $msg[$key]['content'] = $value[1];
     }
-    sleep(1);
+    sleep($sleep);
     return $msg;
+}
+function msg_push($data, $value)
+{
+    $data_value[0] = '';
+    $data_value[1] = $value;
+    array_push($data, $data_value);
+    return $data;
+}
+function msg_unshift($data, $value)
+{
+    $data_value[0] = '';
+    $data_value[1] = $value;
+    array_unshift($data, $data_value);
+    return $data;
 }

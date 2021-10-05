@@ -51,6 +51,9 @@ switch ($type) {
     case "travel_instruction":
         travel_instruction($_POST);
         break;
+    case "leave_maze":
+        leave_maze($_POST);
+        break;
     case "start_game":
         start_game($_POST['role_id'], $_POST['difficulty']);
         break;
@@ -153,11 +156,19 @@ function get_status($frm)
 }
 function travel_save($frm)
 {
+    //4輪後要重新回去排行程
+    $get_round = get_Database_field("role_round", "travel_now", "`role_id` = '{$frm['role_id']}' ORDER BY `add_time` DESC limit 1");
+    if ($get_round == 5) {
+        $age = get_Database_field("role", "age", "`ID`='{$frm['id']}'");
+        update_field("role", "age", ($age + 1), "`ID`={$frm['id']}");
+        start_game($frm['role_id'], $frm['Difficulty']);
+        die;
+    }
 
     //儲存最新行程
-
     if (travel_save_con($frm)) {
         travel_start($frm['role_id']);
+        die;
     } else {
         MsgError($frm['role_id']);
     }
@@ -226,6 +237,41 @@ function maze_monster_creat($frm)
 }
 function travel_instruction($frm)
 {
+    $travel = new travel();
+    echo json_encode($travel->travel_instruction($frm));
+}
+function leave_maze($frm)
+{
+    $data = array(
+        0 => array(
+            0 => "",
+            1 => "",
+        ),
+    );
+    $role_round_id = get_Database_field("maze", "role_round_id", "`ID`={$frm['maze_id']}");
+    $travel_now = get_Database_field("role_round", "travel_now", "`ID`={$role_round_id}");
+    $now = get_Database_field("maze", "now_area", "`ID`={$frm['maze_id']}");
+    if ($now == 0) {
+        $data = msg_push($data, "【 你根本都還沒踏進去... 】");
+        echo json_encode(msg_creat($data, 0));
+        die;
+    }
+    $dice = mt_rand(1, 100);
+    if ($dice >= 50) {
+        update_field("role_round", "travel_now", ($travel_now + 1), "`ID`={$role_round_id}");
+        update_field("maze", "leave_maze", "1", "`ID`={$frm['maze_id']}");
+        $data = msg_push($data, "擲出點數：{$dice}");
+        $data = msg_push($data, "【 你成功撤離這個迷宮了！ 】");
+        $data = msg_push($data, "【 10秒後將進行下一季 】");
+        echo json_encode(msg_creat($data, 0));
+        die;
+    } else {
+        $data = msg_push($data, "擲出點數：{$dice}");
+        $data = msg_push($data, "【 距離成功撤離這個迷宮還差那麼一點點 】");
+        $data = msg_push($data, "【 請再接再厲 】");
+        echo json_encode(msg_creat($data, 0));
+        die;
+    }
 
 }
 //錯誤畫面
@@ -234,4 +280,5 @@ function MsgError($role_id)
     $js = "js/MsgError.js";
     require_once "./view/index_error.php";
     require_once './view/footer_error.html';
+    die;
 }

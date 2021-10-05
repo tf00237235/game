@@ -13,6 +13,13 @@
   <div id="dialog_about_me" style="display:none;overflow:auto;" ></div>
   <input type="hidden" id="role_id" value="<?=$role_id?>">
   <input type="hidden" id="maze_id" value="<?=$maze_id?>">
+  <input type="hidden" id="instruction_num" value="0">
+  <input type="hidden" id="monster" value="0">
+  <form id="form">
+    <input type="hidden" name="type" id="type" value="">
+    <input type="hidden" name="role_id" value="<?=$role_id?>">
+    <input type="hidden" name="difficulty" value="">
+  </form>
   <div id="dialog" style="display:none"></div>
     <nav class='nav'>
       <div> Dice </div>

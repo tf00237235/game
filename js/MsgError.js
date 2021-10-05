@@ -13,7 +13,6 @@ const type = new Type(strings, 30);
 type.typingEffect();
 
 function back_city(form) {
-    console.log(form);
     form.type.value = 'start_game';
     form.method = 'post';
     form.action = "./home.php"

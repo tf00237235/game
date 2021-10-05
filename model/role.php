@@ -90,16 +90,16 @@ function check_role_ability($row, $role_id)
     $select = "SELECT ID FROM `role` WHERE ID = '" . $role_id . "'";
     $db_select = $connection->query($select);
     $num = $db_select->rowCount();
-
+    $hp = $row['con'] * (10 + $row['vit']);
     if ($num) {
-        $ability = "`Str`='" . $row['str'] . "',`Dex`='" . $row['agi'] . "',`intellect`='" . $row['int'] . "',`Vit`='" . $row['con'] . "',`Viter`='" . $row['vit'] . "'";
+        $ability = "`HP`='{$hp}',`Str`='" . $row['str'] . "',`Dex`='" . $row['agi'] . "',`intellect`='" . $row['int'] . "',`Vit`='" . $row['con'] . "',`Viter`='" . $row['vit'] . "'";
         //更新骰出結果
         $update = "UPDATE `role` SET " . $ability . " WHERE `ID` = '" . $role_id . "'";
         $db_update = $connection->query($update);
     } else {
-        $ability = "'" . $row['str'] . "','" . $row['agi'] . "','" . $row['int'] . "','" . $row['con'] . "','" . $row['vit'] . "'";
+        $ability = "'{$hp}','" . $row['str'] . "','" . $row['agi'] . "','" . $row['int'] . "','" . $row['con'] . "','" . $row['vit'] . "'";
         //新增骰出結果
-        $insert = "INSERT INTO `role` (`Str`, `Dex`, `intellect`, `Vit`, `Viter`) VALUE ('" . $row . "')";
+        $insert = "INSERT INTO `role` (`HP`,`Str`, `Dex`, `intellect`, `Vit`, `Viter`) VALUE ('" . $row . "')";
         $db_insert = $connection->query($insert);
         $role_id = $connection->lastInsertId();
     }

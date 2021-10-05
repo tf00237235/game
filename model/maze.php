@@ -62,12 +62,15 @@ function maze_monster_creat_con($maze_id)
                 1 => "【 已創建過怪物 】",
             ),
         );
-        return msg_creat($data);
+        return msg_creat($data, 1);
     }
+    //取得迷宮大小上限
+    $get_maze_size = get_Database_field("maze", "size", "`ID`='{$maze_id}'");
     //怪物
     $get_monster_num = get_Database_field("maze", "monster_num", "`ID`='{$maze_id}'");
     for ($j = 0; $j < $get_monster_num; $j++) {
         $monster_name = '';
+        $maze_location = mt_rand(1, $get_maze_size);
         $type = 0;
         for ($k = 0; $k < 5; $k++) {
             $monster_dice[$k] = mt_rand(1, 30);
@@ -100,14 +103,16 @@ function maze_monster_creat_con($maze_id)
         $monster_name .= ($type) ? "菁英怪物" : "普通的怪物";
 
         $warn_num = mt_rand(0, 100);
-        $insert = "INSERT INTO `monster`( `maze_id`, `Name`, `warn_num`, `Str`, `Dex`, `intellect`, `Vit`, `Viter`, `Lck`, `type`, `Deat`) VALUES " .
-            "('{$maze_id}','{$monster_name}','{$warn_num}','{$monster_dice[0]}','{$monster_dice[1]}','{$monster_dice[2]}','{$monster_dice[3]}','{$monster_dice[4]}','{$monster_dice[5]}','{$type}','0')";
+        $hp = $monster_dice['3'] * (10 + $monster_dice['4']);
+        $insert = "INSERT INTO `monster`(`hp`, `maze_id`, `Name`, `warn_num`, `Str`, `Dex`, `intellect`, `Vit`, `Viter`, `Lck`, `type`,`maze_location`, `Deat`) VALUES " .
+            "('{$hp}','{$maze_id}','{$monster_name}','{$warn_num}','{$monster_dice[0]}','{$monster_dice[1]}','{$monster_dice[2]}','{$monster_dice[3]}','{$monster_dice[4]}','{$monster_dice[5]}','{$type}','{$maze_location}','0')";
         $db = $connection->query($insert);
     }
     //boss
     $get_boss_num = get_Database_field("maze", "boss_num", "`ID`='{$maze_id}'");
     for ($j = 0; $j < $get_boss_num; $j++) {
         $monster_name = '';
+        $maze_location = mt_rand(1, $get_maze_size);
         $type = 2;
         for ($k = 0; $k < 5; $k++) {
             $monster_dice[$k] = mt_rand(20, 40);
@@ -116,8 +121,9 @@ function maze_monster_creat_con($maze_id)
 
         $monster_name .= "BOSS";
         $warn_num = mt_rand(0, 300);
-        $insert = "INSERT INTO `monster`( `maze_id`, `Name`, `warn_num`, `Str`, `Dex`, `intellect`, `Vit`, `Viter`, `Lck`, `type`, `Deat`) VALUES " .
-            "('{$maze_id}','{$monster_name}','{$warn_num}','{$monster_dice[0]}','{$monster_dice[1]}','{$monster_dice[2]}','{$monster_dice[3]}','{$monster_dice[4]}','{$monster_dice[5]}','{$type}','0')";
+        $hp = ($monster_dice['3'] * (15 + $monster_dice['4'])) + 500;
+        $insert = "INSERT INTO `monster`(`hp`, `maze_id`, `Name`, `warn_num`, `Str`, `Dex`, `intellect`, `Vit`, `Viter`, `Lck`, `type`,`maze_location`, `Deat`) VALUES " .
+            "('{$hp}','{$maze_id}','{$monster_name}','{$warn_num}','{$monster_dice[0]}','{$monster_dice[1]}','{$monster_dice[2]}','{$monster_dice[3]}','{$monster_dice[4]}','{$monster_dice[5]}','{$type}','{$maze_location}','0')";
         $db = $connection->query($insert);
     }
     update_field("maze", "monster_creat_finish", "1", "`ID`='{$maze_id}'");
@@ -127,15 +133,23 @@ function maze_monster_creat_con($maze_id)
 function monster_dice($maze_id)
 {
     global $connection;
-    $select = get_field_array("monster", "ID,Str,Dex,intellect,viter,vit,lck", "`maze_id`='{$maze_id}'");
+    $select = get_field_array("monster", "ID,type,Str,Dex,intellect,viter,vit,lck", "`maze_id`='{$maze_id}'");
     foreach ($select as $key => $role) {
+        $monster_type = $role['type'];
         $monster_id = $role['ID'];
+        unset($role['ID']);
+        unset($role['type']);
         //攻、防、閃、物點數
         $def_dice_range = round($role['vit'] * 1.1) . "," . round($role['vit'] * 1.8);
         $dodge_dice_range = round($role['Dex'] * 1.1) . "," . round($role['Dex'] * 1.8);
-        unset($role['ID']);
-        rsort($role);
-        $atk_dice_range = round(($role['0'] * 1.6) + ($role['1'] * 1.4)) . "," . round(($role['0'] * 2) + ($role['1'] * 1.4));
+        //boss 特化骰子
+        if ($monster_type >= 2) {
+            rsort($role);
+            $atk_dice_range = round(($role['0'] * 1.6) + ($role['1'] * 1.4)) . "," . round(($role['0'] * 2) + ($role['1'] * 1.4));
+        } else {
+            $atk_dice_range = round(($role['Str'] * 1.6) + ($role['intellect'] * 1.4)) . "," . round(($role['Str'] * 2) + ($role['intellect'] * 1.4));
+        }
+
         $insert = "INSERT INTO `monster_dice`( `monster_id`, `atk_dice_num`, `def_dice_num`, `dodge_dice_num`, `atk_dice_range`, `def_dice_range`, `dodge_dice_range`) VALUES " .
             "('{$monster_id}','1','1','1','{$atk_dice_range}','{$def_dice_range}','{$dodge_dice_range}')";
         $db = $connection->query($insert);
@@ -164,7 +178,7 @@ function monster_dice($maze_id)
         ),
     );
 
-    return msg_creat($data);
+    return msg_creat($data, 1);
 }
 //骰迷宮本體
 function travel_size($parameter)
